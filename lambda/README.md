@@ -85,7 +85,7 @@ EOF
 #lambda.tf
 
 # Create the function
-resource "aws_lambda_function" "test_lambda" {
+resource "aws_lambda_function" "service" {
   filename         = "lambda_function.zip"
   function_name    = "test_lambda"
   role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
@@ -109,4 +109,35 @@ output "function_name" {
   value = "${aws_lambda_function.service.function_name}"
 }
 
+```
+
+* Initialize terraform
+First of all we will need to initialize terraform. this will download the necessary plugins that we used in the code, otherwise it won’t be able to run.
+
+```
+terraform init
+
+```
+* Apply the changes
+The next step would be to apply the changes, this command will take care of doing everything that we defined, it will archive the code, the IAM role and the function itself.
+
+```
+terraform apply
+
+```
+
+* Running the function
+Then the last step would be to run our function to see if it actually works, in this case we’re using the awscli but you can use the AWS console as well, the result will be the same.
+
+```
+aws lambda invoke --function-name$ test_lambda --invocation-type RequestResponse --log-type Tail - | jq '.LogResult' -r | base64 --decode
+
+```
+
+* Clean up
+Remember to clean up before leaving.
+
+```
+
+terraform destroy
 ```
