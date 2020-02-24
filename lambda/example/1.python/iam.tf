@@ -1,7 +1,7 @@
 
 # Necessary permissions to create/run the function 
 resource "aws_iam_role" "iam_for_lambda_tf" {
-  name = "iam_for_lambda_tf_1_nodejs"
+  name = "iam_for_lambda_tf_1_python"
 
   assume_role_policy = <<EOF
 {

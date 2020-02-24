@@ -1,20 +1,23 @@
-# Creating a nodejs lambda function
+# Creating a python lambda function
 
-It will be a simple hello world in node.js.
+It will be a simple hello world in python.
 
 Before you start make sure you already have your account configured for awscli and terraform installed.
 
 * write your business logic for lambda function.
 
 ```
-# src/index.js
+# src/lambda_function.py
 
-// 'Hello World' nodejs10.x runtime AWS Lambda function
+import json
 
-exports.handler = (event, context, callback) => {
-    console.log('Hello world!');
-    callback(null, 'It works!');
-}
+def lambda_handler(event, context):
+    # TODO implement
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }
+
 
 ```
 
@@ -38,14 +41,14 @@ variable "aws_region" {
 
 # Assign the region to the provider in this case AWS
 provider "aws" {
-  region          = "${var.aws_region}"
+  region = "${var.aws_region}"
 }
 
 # Archive the code or project that we want to run
 data "archive_file" "lambda_zip" {
-    type          = "zip"
-    source_file   = "src/index.js"
-    output_path   = "lambda_function.zip"
+  type        = "zip"
+  source_dir  = "${path.module}/src/"
+  output_path = "${path.module}/src/python_1_lambda_function.zip"
 }
 
 ```
@@ -57,7 +60,7 @@ data "archive_file" "lambda_zip" {
 
 # Necessary permissions to create/run the function 
 resource "aws_iam_role" "iam_for_lambda_tf" {
-  name = "iam_for_lambda_tf_1_nodejs"
+  name = "iam_for_lambda_tf_1_python"
 
   assume_role_policy = <<EOF
 {
@@ -86,13 +89,15 @@ EOF
 
 # Create the function
 resource "aws_lambda_function" "service" {
-  filename         = "lambda_function.zip"
-  function_name    = "test_lambda"
+  function_name    = "python_1_lambda_function"
   role             = "${aws_iam_role.iam_for_lambda_tf.arn}"
-  handler          = "index.handler"
+  handler          = "lambda_function.lambda_handler"
+  filename         = "${data.archive_file.lambda_zip.output_path}"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
-  runtime          = "nodejs8.10"
+  runtime          = "python3.7"
+  timeout          = 60
 }
+
 
 ```
 
@@ -130,7 +135,7 @@ terraform apply
 Then the last step would be to run our function to see if it actually works, in this case we’re using the awscli but you can use the AWS console as well, the result will be the same.
 
 ```
-aws lambda invoke --function-name nodejs_1 --invocation-type RequestResponse --log-type Tail - | jq '.LogResult' -r | base64 --decode
+aws lambda invoke --function-name python_1_lambda_function --invocation-type RequestResponse --log-type Tail - | jq '.LogResult' -r | base64 --decode
 
 ```
 
