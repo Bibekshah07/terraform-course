@@ -2,5 +2,5 @@
 *.backup
 *.tfstate
 .vs/
-
+*.DS_Store
 *.zip
