@@ -15,7 +15,7 @@ To learn about module, follow the readme of each module.
 
 ```hcl
 module "ec2_instance" {
-  source     = "git::https://github.com/easyawslearn/Terraform-Tutorial.git/EC2withJenkins"
+  source     = "git::https://github.com/prabhatpankaj/terraform-course/terraform-aws-ec2-jenkins"
 
   region        = "us-west-2"
   key-name      = "ec2-demo"
