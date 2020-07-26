@@ -13,13 +13,13 @@ module "ecs" {
   aws_profile               = var.aws_profile
   container_port            = var.container_port
   agent_port                = var.agent_port
-  ec2_security_group        = aws_security_group.ec2.id
-  aws_iam_instance_profile  = aws_iam_instance_profile.iam_instance_profile.name
+  ec2_security_group        = var.aws_security_group_jenkins_ecs_id
+  aws_iam_instance_profile  = var.iam_role_jenkins
   key_name                  = var.key_name
   instance_type             = var.instance_type
   amis                      = var.amis
-  aws_security_group        = aws_security_group.ec2.id
-  vpc_zone_identifier       = aws_subnet.jenkins.*.id
+  aws_security_group        = var.aws_security_group_jenkins_ecs_id
+  vpc_zone_identifier       = split( ",", var.alb_subnet_ids)
   availability_zone         = var.availability_zone
   min_instance_size         = var.min_instance_size
   max_instance_size         = var.max_instance_size

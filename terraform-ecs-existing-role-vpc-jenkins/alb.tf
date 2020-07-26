@@ -3,39 +3,12 @@ locals {
   hosts_name    = ["${var.hosts_name}"] #example : fill your information
 }
 
-resource "aws_security_group" "jenkins_alb" {
-  name   = "${var.ecs_cluster_name}-alb"
-  vpc_id = aws_vpc.jenkins.id
-
-  ingress {
-    from_port   = 443
-    protocol    = "tcp"
-    to_port     = 443
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    protocol    = "tcp"
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-}
-
 resource "aws_alb" "jenkins" {
   name               = "${var.ecs_cluster_name}-service-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = ["${aws_security_group.jenkins_alb.id}"]
-  subnets            = aws_subnet.jenkins.*.id
+  security_groups    = [var.aws_security_group_jenkins_alb_id]
+  subnets            = split( ",", var.alb_subnet_ids)
 
   tags = {
     Name = var.ecs_cluster_name
@@ -48,7 +21,7 @@ resource "aws_alb_target_group" "jenkins" {
 
   port        = var.container_port
   protocol    = "HTTP"
-  vpc_id      = aws_vpc.jenkins.id
+  vpc_id      = var.vpc
   target_type = "instance"
 
   health_check {

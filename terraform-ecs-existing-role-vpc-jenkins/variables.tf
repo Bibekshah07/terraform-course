@@ -109,9 +109,28 @@ variable "build_trigger" {
   default = "18"
 }
 
-variable "host_role_jenkins_arn" {
+variable "iam_role_jenkins" {
   type    = string
-  default = "role_arn"
+  default = "host_role_jenkins-ecs_custom"
 }
 
+variable "vpc" {
+  type    = string
+  default = "vpc-0c646dec282777397"
+}
 
+variable "aws_security_group_jenkins_alb_id" {
+  type    = string
+  default = "sg-0274d06f7db34b19b"
+}
+
+variable "aws_security_group_jenkins_ecs_id" {
+  type    = string
+  default = "sg-077cb68722904b6d0"
+}
+
+variable "alb_subnet_ids" {
+  type    = string
+  default = "subnet-0edf451e03366d61d,subnet-0ac094039d9ff484b,subnet-08846c94d3c01f41c"
+  
+}
