@@ -109,13 +109,9 @@ variable "build_trigger" {
   default = "18"
 }
 
-variable "host_role_jenkins" {
+variable "host_role_jenkins_arn" {
   type    = string
-  default = "*.kantlearning.com"
+  default = "role_arn"
 }
 
-variable "instance_role_policy_jenkins" {
-  type    = string
-  default = "*.kantlearning.com"
-}
 
