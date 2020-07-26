@@ -1,0 +1,5 @@
+jenkins:
+  systemMessage: "Jenkins homepage"
+  numExecutors: 4
+  mode: NORMAL
+  scmCheckoutRetryCount: 3
